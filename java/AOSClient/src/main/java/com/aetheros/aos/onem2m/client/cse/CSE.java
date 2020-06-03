@@ -28,7 +28,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.aetheros.aos.onem2m.client.exceptions.DuplicateRegistrationException;
+import com.aetheros.aos.onem2m.client.exceptions.InvalidAcceptTypeException;
 import com.aetheros.aos.onem2m.client.exceptions.InvalidOneM2MOptionException;
+import com.aetheros.aos.onem2m.client.exceptions.OneM2MException;
 import com.aetheros.aos.onem2m.client.exceptions.UnsupportedContentFormatException;
 import com.aetheros.aos.onem2m.client.request.OneM2MRequest;
 import com.aetheros.aos.onem2m.common.resources.ACPEXT;
@@ -70,6 +72,7 @@ public class CSE {
     private CoapClient client;
     private AEID aeId;
     private Gson gson = buidlGson();
+    private int accept = MediaTypes.APPLICATION_JSON;
 
     /**
      * Constructor I.
@@ -101,7 +104,7 @@ public class CSE {
      * @return The registed AE.
      * @throws DuplicateRegistrationException
      */
-    public AE register(AE ae) throws DuplicateRegistrationException {
+    public AE register(AE ae) throws OneM2MException {
         // CSE resource.
         final String RESOURCE = ".";
 
@@ -132,7 +135,7 @@ public class CSE {
                 options.addOption(new OneM2MOption(OneM2MOption.FROM, ""));  // Should be empty
                 options.addOption(new OneM2MOption(OneM2MOption.REQUEST_IDENTIFIER, UUID.randomUUID().toString())); // <-- Generate cheap hash for request id?
                 options.addOption(new OneM2MOption(OneM2MOption.RESOURCE_TYPE, 2)); // OneM2M option.
-                options.addOption(new Option(OptionNumberRegistry.ACCEPT, MediaTypes.APPLICATION_JSON)); // CoAP option.
+                options.addOption(new Option(OptionNumberRegistry.ACCEPT, this.accept)); // CoAP option.
 
                 // Set the request options.
                 req.setOptions(options);
@@ -143,25 +146,31 @@ public class CSE {
                 // Set the payload.
                 req.setPayload(payload);
 
+                // Send the request.
+                CoapResponse res = this.client.advanced(req); /****** Blocking call ********/
+
+                // throws invalid accept type exception
+                validateResponse(res);
+
+
+                // Deserialize the response object.
+                JSONObject obj = new JSONObject(res.getResponseText());
+
+                // Convert the json object to a pojo.
+                AE responseAE = this.gson.fromJson(obj.getJSONObject("ae").toString(), AE.class);
+
+
+                this.aeId = new AEID(responseAE.getAei()); // Store the aeid.
+
+                return responseAE;
+
             } catch (InvalidOneM2MOptionException ex) {
-                System.out.println(ex.getMessage());
+                throw ex;
             } catch (UnsupportedContentFormatException ex) {
-                System.out.println(ex.getMessage());
+                throw ex;
+            } catch(OneM2MException ex) {
+                throw ex;
             }
-
-            // Send the request.
-            CoapResponse res = this.client.advanced(req); /****** Blocking call ********/
-
-            // Deserialize the response object.
-            JSONObject obj = new JSONObject(res.getResponseText());
-
-            // Convert the json object to a pojo.
-            AE responseAE = this.gson.fromJson(obj.getJSONObject("ae").toString(), AE.class);
-
-
-            this.aeId = new AEID(responseAE.getAei()); // Store the aeid.
-
-            return responseAE;
         } catch (URISyntaxException ex) {
             // handle uri issue.
             System.out.println("An exception was thrown");
@@ -174,6 +183,14 @@ public class CSE {
         // Return an empty AE.
         // @todo handle CoAP server errors.
         return new AE();
+    }
+
+    /**
+     * Sets the media type the client will accept in response.
+     * @param accept
+     */
+    public void setAcceptType(int accept) {
+        this.accept = accept;
     }
 
     /**
@@ -274,6 +291,13 @@ public class CSE {
      */
     public AEID getAEID() {
         return this.aeId;
+    }
+
+    private void validateResponse(CoapResponse response) throws OneM2MException {
+        switch(response.getCode()) {
+            case NOT_ACCEPTABLE:
+                throw new InvalidAcceptTypeException(this.accept);
+        }
     }
 
     /**

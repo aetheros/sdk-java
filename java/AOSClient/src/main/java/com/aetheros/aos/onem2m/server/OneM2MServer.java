@@ -32,7 +32,10 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.aetheros.aos.onem2m.common.resources.ACPEXT;
+import com.aetheros.aos.onem2m.common.resources.AE;
+import com.aetheros.aos.onem2m.common.resources.BAT;
 import com.aetheros.aos.onem2m.common.resources.Channel;
+import com.aetheros.aos.onem2m.common.resources.Child;
 import com.aetheros.aos.onem2m.common.resources.DeviceInformation;
 import com.aetheros.aos.onem2m.common.resources.ExternalConnectivityMonitor;
 import com.aetheros.aos.onem2m.common.resources.ExternalModuleInformation;
@@ -71,143 +74,93 @@ public class OneM2MServer extends CoapServer {
 		// Set supported media types.
 		this.mediaTypes.add(MediaTypes.APPLICATION_JSON);
 
-		// Create SP-Relative path ~/MN_CSE
-		CoapResource spRelativePath = new CoapResource("~");
-
-		// Add nested path.
-		spRelativePath.add(new Resource("MN_CSE", "MN-CSE") {
+		// Create the AE registration resource.
+		Resource spRelativePath = new Resource(".", "AE Registration") {
 			@Override
 			public void handlePOST(CoapExchange exchange) {
-				System.out.println("===========================================");
-				System.out.println("========= POST REQUESTED RECIEVED =========");
-				System.out.println("===========================================\n");
-				System.out.println(String.format("Code: %s", exchange.getRequestCode()));
-				System.out.println(String.format("Uri-Host: %s", exchange.getSourceAddress()));
-				System.out.println(String.format("Uri-Port: %s", exchange.getSourcePort()));
-				System.out.println(String.format("Uri-Path: %s", exchange.getRequestOptions().getUriPath().toString()));
-				System.out.println(String.format("Content-Format: %s", exchange.getRequestOptions().getContentFormat()));
-				System.out.println(String.format("Accept: %s", exchange.getRequestOptions().getAccept()));
+				printRequest(exchange);
 
-				/*
-				 * Content format negotion.
-				 * If the hosting CSE does not support the Content-Format specified in the 
-				 * accept option of the request, 4.06 "Not Acceptable" shall be sent as a
-				 * response.
-				 */
-				// Option acceptOption = exchange.getRequestOptions().getOthers().get(OneM2MOption.ACCEPT);
-				// System.out.println(acceptOption);
-				// if(acceptOption.getIntegerValue() != null && !isMediaTypeSupported(acceptOption.getIntegerValue())) {
-				// 	exchange.respond(ResponseCode.NOT_ACCEPTABLE);
-				// }
+				// Validate the request content.
+				ValidatedRequest validatedRequest = validateRequest(exchange);
 
-				exchange.getRequestOptions().getOthers().forEach(option -> {
-					System.out.println(String.format("%d: %s", option.getNumber(), option.getStringValue()));
-				});
+				if(validatedRequest.isValid) {
+					// Get the payload.
+					// PC pc = new Gson().fromJson(exchange.getRequestText(), PC.class);
+					AE ae = new AE();
+					ae.setAei(""+new Random().nextInt(1000000000));
 
-				System.out.println(exchange.getRequestText());
+					AEOBJ aeObj = new AEOBJ(ae);
 
-				System.out.println("\n===========================================");
-				System.out.println("============== END OF REQUESTED =============");
-				System.out.println("===========================================\n");
+					// Build the response.
+					OneM2MResponse createdRes = new OneM2MResponse(ResponseCode.CREATED);
+					createdRes.setType(Type.CON);
+					createdRes.setPayload(new Gson().toJson(aeObj));
+					OptionSet options = new OptionSet();
+					options.setUriHost(exchange.getSourceAddress().toString());
+					options.setUriPort(exchange.getSourcePort());
+					options.setUriPath(exchange.getRequestOptions().getUriPath().toString().replaceAll("\\[", "").replaceAll("\\]", ""));
+					options.setContentFormat(exchange.getRequestOptions().getContentFormat());
+					// options.addOption(new Option(OneM2MOption.FROM, "" + new Random().nextInt(1000000000))); // MN-AE-ID generate random id.
+					options.addOption(new Option(OneM2MOption.RESPONSE_STATUS_CODE, "2001"));
+					createdRes.setOptions(options);
 
-				// Get the payload.
-				PC pc = new Gson().fromJson(exchange.getRequestText(), PC.class);
-
-				// Build the response.
-				OneM2MResponse res = new OneM2MResponse(ResponseCode.CREATED);
-				res.setType(Type.CON);
-				res.setPayload(new Gson().toJson(pc.getAe()));
-				OptionSet options = new OptionSet();
-				options.setUriHost(exchange.getSourceAddress().toString());
-				options.setUriPort(exchange.getSourcePort());
-				options.setUriPath(exchange.getRequestOptions().getUriPath().toString().replaceAll("\\[", "").replaceAll("\\]", ""));
-				options.setContentFormat(exchange.getRequestOptions().getContentFormat());
-				options.addOption(new Option(OneM2MOption.FROM, "" + new Random().nextInt(1000000000))); // MN-AE-ID generate random id.
-				options.addOption(new Option(OneM2MOption.RESPONSE_STATUS_CODE, "2001"));
-				res.setOptions(options);
-
-				// send the response.
-				exchange.respond(res);
+					// send the response.
+					exchange.respond(createdRes);
+				} else {
+					OneM2MResponse errRes = new OneM2MResponse(validatedRequest.responseCode);
+					errRes.setType(Type.NON);
+					exchange.respond(errRes);
+				}
 			}
-		});
+		};
 
-		CoapResource retrieveNodePath = new CoapResource("MN_CSE");
-
-		// Add nested path.
-		retrieveNodePath.add(new Resource("node", "MN-CSE NODE") {
+		Resource retrieveNodePath = new Resource("node", "MN-CSE NODE") {
 			@Override
 			public void handleGET(CoapExchange exchange) {
-				System.out.println("===========================================");
-				System.out.println("========= GET REQUESTED RECIEVED =========");
-				System.out.println("===========================================\n");
-				System.out.println(String.format("Code: %s", exchange.getRequestCode()));
-				System.out.println(String.format("Uri-Host: %s", exchange.getSourceAddress()));
-				System.out.println(String.format("Uri-Port: %s", exchange.getSourcePort()));
-				System.out.println(String.format("Uri-Path: %s", exchange.getRequestOptions().getUriPath().toString()));
-				System.out.println(String.format("Content-Format: %s", exchange.getRequestOptions().getContentFormat()));
+				printRequest(exchange);
 
-				exchange.getRequestOptions().getOthers().forEach(option -> {
-					System.out.println(String.format("%d: %s", option.getNumber(), option.getStringValue()));
-				});
+				// Validate the request content.
+				ValidatedRequest validatedRequest = validateRequest(exchange);
 
-				System.out.println(exchange.getRequestText());
+				if(validatedRequest.isValid) {
+					// Build the response.
+					OneM2MResponse res = new OneM2MResponse(ResponseCode.CONTENT);
+					res.setType(Type.ACK);
 
-				System.out.println("\n===========================================");
-				System.out.println("============== END OF REQUESTED =============");
-				System.out.println("===========================================\n");
+					// Build a node object for the response payload.
+					Node node = new Node();
+					node.addChild(new CMEXT(new ExternalConnectivityMonitor(
+						ThreadLocalRandom.current().nextInt(-180, -10 - 1),
+						ThreadLocalRandom.current().nextInt(-50, 50 - 1)
+						)
+					));
+					node.addChild(new DVI(new DeviceInformation("Water Meter", "6.0.0", "A12Q7")));
+					node.addChild(new MIEXT(new ExternalModuleInformation(
+						2, "8914800000504160OneM2MOption.STATUS_CODE7", "352427090007070", "311270002255837", "20190726T155222",
+						"UTC", true
+					)));
 
-				// Build the response.
-				OneM2MResponse res = new OneM2MResponse(ResponseCode.CONTENT);
-				res.setType(Type.ACK);
+					// Construct the payload.
+					NodeResponsePayload payload = new NodeResponsePayload(node);
 
-				List<Option> requestOptions = exchange.getRequestOptions().getOthers();
+					res.setPayload(new Gson().toJson(payload));
 
-				String aeId = null;
-				String rqi = null;
+					OptionSet options = new OptionSet();
+					options.setUriHost(exchange.getSourceAddress().toString());
+					options.setUriPort(exchange.getSourcePort());
+					options.setUriPath(exchange.getRequestOptions().getUriPath().toString().replaceAll("\\[", "").replaceAll("\\]", ""));
+					options.setContentFormat(exchange.getRequestOptions().getContentFormat());
+					res.setOptions(options);
 
-				for(Option option : requestOptions) {
-					if(option.getNumber() == OneM2MOption.REQUEST_IDENTIFIER) {
-						rqi = option.getStringValue();
-					} else if(option.getNumber() == OneM2MOption.FROM) {
-						aeId = option.getStringValue();
-					}
+					// send the response.
+					exchange.respond(res);
+				} else {
+					OneM2MResponse errRes = new OneM2MResponse(validatedRequest.responseCode);
+					errRes.setType(Type.NON);
+					exchange.respond(errRes);
 				}
-
-				// Build response.
-				Node node = new Node();
-				// DeviceChild deviceChild = new DeviceChild();
-				// node.addChild(new DeviceInformation("Water Meter", "6.0.0", "A12Q7"));
-				node.addChild(new ExternalModuleInformation(
-					2, "8914800000504160OneM2MOption.STATUS_CODE7", "352427090007070", "311270002255837", "20190726T155222",
-					"UTC", true
-				));
-				// node.addChild(new ExternalConnectivityMonitor(
-				// 	ThreadLocalRandom.current().nextInt(-180, -10 - 1),
-				// 	ThreadLocalRandom.current().nextInt(-50, 50 - 1)
-				// 	 ));
-				node.addChild(new NetworkInformation(
-					new ACPEXT("grdwdlab.vzwentp"),
-					new TSTMD(new ArrayList<Channel>(
-						List.of(new LTE(1, 0, 4, 20000, 2, 20.0, 0.0))
-					))
-				));
-
-				// Construct the payload.
-				NodeResponsePayload payload = new NodeResponsePayload(node);
-
-				res.setPayload(new Gson().toJson(payload));
-
-				OptionSet options = new OptionSet();
-				options.setUriHost(exchange.getSourceAddress().toString());
-				options.setUriPort(exchange.getSourcePort());
-				options.setUriPath(exchange.getRequestOptions().getUriPath().toString().replaceAll("\\[", "").replaceAll("\\]", ""));
-				options.setContentFormat(exchange.getRequestOptions().getContentFormat());
-				res.setOptions(options);
-
-				// send the response.
-				exchange.respond(res);
 			}
-		});
+		};
 
 		add(spRelativePath);
 		add(retrieveNodePath);
@@ -249,6 +202,89 @@ public class OneM2MServer extends CoapServer {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private void printRequest(CoapExchange exchange) {
+		System.out.println(String.format("Code: %s", exchange.getRequestCode()));
+		System.out.println(String.format("Uri-Host: %s", exchange.getSourceAddress()));
+		System.out.println(String.format("Uri-Port: %s", exchange.getSourcePort()));
+		System.out.println(String.format("Uri-Path: %s", exchange.getRequestOptions().getUriPath().toString()));
+		System.out.println(String.format("Content-Format: %s", exchange.getRequestOptions().getContentFormat()));
+		System.out.println(String.format("Accept: %s", exchange.getRequestOptions().getAccept()));
+
+		exchange.getRequestOptions().getOthers().forEach(option -> {
+			System.out.println(String.format("%d: %s", option.getNumber(), option.getStringValue()));
+		});
+
+		System.out.println(exchange.getRequestText());
+	}
+
+	private ValidatedRequest validateRequest(CoapExchange exchange) {
+		/*
+		 * Content format negotion.
+		 * If the hosting CSE does not support the Content-Format specified in the 
+		 * accept option of the request, 4.06 "Not Acceptable" shall be sent as a
+		 * response.
+		 */
+		int acceptOption = exchange.getRequestOptions().getAccept();
+
+		switch(acceptOption) {
+			case MediaTypes.APPLICATION_JSON:
+			return new ValidatedRequest(true);
+			default:
+			return new ValidatedRequest(false, ResponseCode.NOT_ACCEPTABLE, "Unsupported media type requested by client.");
+		}
+	}
+
+	class ValidatedRequest {
+		public boolean isValid;
+		public ResponseCode responseCode;
+		public String reason;
+
+		public ValidatedRequest(boolean isValid) {
+			this.isValid =  isValid;
+		}
+
+		public ValidatedRequest(boolean isValid, ResponseCode responseCode, String reason) {	
+			this.isValid =  isValid;
+			this.responseCode = responseCode;
+			this.reason = reason;
+		}
+	}
+
+	/**
+	 * Wrapper classes for children.
+	 */
+	private class AEOBJ {
+		public AE ae;
+
+		public AEOBJ(AE ae) {
+			this.ae = ae;
+		}
+	}
+
+	private class CMEXT extends Child {
+		public Child cmext;
+
+		public CMEXT(Child child) {
+			this.cmext= child;
+		}
+	}
+
+	private class DVI extends Child {
+		public Child dvi;
+
+		public DVI(Child child) {
+			this.dvi = child;
+		}
+	}
+
+	private class MIEXT extends Child {
+		public Child miext;
+
+		public MIEXT(Child child) {
+			this.miext = child;
 		}
 	}
 }

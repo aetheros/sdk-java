@@ -23,7 +23,7 @@
 
 package com.aetheros.aos.onem2m.client.exceptions;
 
-public class InvalidOneM2MOptionException extends Exception {
+public class InvalidOneM2MOptionException extends OneM2MException {
     /**
      *
      */

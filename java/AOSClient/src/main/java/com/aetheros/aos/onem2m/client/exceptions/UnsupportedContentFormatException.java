@@ -23,7 +23,7 @@
 
 package com.aetheros.aos.onem2m.client.exceptions;
 
-public class UnsupportedContentFormatException extends Exception {
+public class UnsupportedContentFormatException extends OneM2MException {
 
     /**
      *

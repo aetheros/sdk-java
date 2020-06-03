@@ -23,6 +23,8 @@
 
 package com.aetheros.aos.onem2m.common.resources;
 
+import java.util.ArrayList;
+
 /**
  * Device Information Resource.
  */
@@ -32,6 +34,7 @@ public class DeviceInformation extends Child {
     private String dty;
     private String fwv;
     private String hwv;
+    private ArrayList<String> lbl;
     private String lt;
     private String man;
     private int mgd;
@@ -41,6 +44,12 @@ public class DeviceInformation extends Child {
     private String rn;
     private String swv;
     private int ty;
+
+    public DeviceInformation(String dty, String fwv, String mod) {
+        this.dty = dty;
+        this.fwv = fwv; 
+        this.mod = mod;
+    }
 
     /**
      * Returns value of ct
@@ -131,6 +140,23 @@ public class DeviceInformation extends Child {
     public void setHwv(String hwv) {
         this.hwv = hwv;
     }
+
+    /**
+     * Add a meter id to the lbl array.
+     * @param lbl
+     */
+    public void addLbl(String lbl) {
+        this.lbl.add(lbl);
+    }
+
+    /**
+     * 
+     * @param lbl
+     */
+    public ArrayList<String> getLbl() {
+        return this.lbl;
+    }
+
 
     /**
      * Returns value of lt

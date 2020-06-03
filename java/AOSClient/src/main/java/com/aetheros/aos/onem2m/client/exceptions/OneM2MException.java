@@ -21,33 +21,16 @@
  *
  *****************************************************************************/
 
-package com.aetheros.aos.onem2m.common.resources;
+package com.aetheros.aos.onem2m.client.exceptions;
 
-/**
- * Structure class for Connectivity Monitoring External Resource
- * (cmext).
- */
-public class ExternalConnectivityMonitor extends Child {
-    private int rsrp;
-    private int rsrq;
+public class OneM2MException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-    public ExternalConnectivityMonitor(int rsrp, int rsrq) {
-        this.rsrp = rsrp;
-        this.rsrq = rsrq;
+    OneM2MException() {
+        super();
     }
 
-    /** 
-     * @return int The rsrp.
-     */
-    public int getRsrp() {
-        return this.rsrp;
-    }
-
-    
-    /** 
-     * @return int The rsrq.
-     */
-    public int getRsrq() {
-        return this.rsrq;
+    OneM2MException(String msg) {
+        super(msg);
     }
 }

@@ -1,3 +1,4 @@
+
 /****************************************************************************
  *            AETHEROS, INC. CONFIDENTIAL
  *
@@ -21,33 +22,16 @@
  *
  *****************************************************************************/
 
-package com.aetheros.aos.onem2m.common.resources;
+package com.aetheros.aos.onem2m.client.exceptions;
 
-/**
- * Structure class for Connectivity Monitoring External Resource
- * (cmext).
- */
-public class ExternalConnectivityMonitor extends Child {
-    private int rsrp;
-    private int rsrq;
+public class InvalidAcceptTypeException extends OneM2MException {
 
-    public ExternalConnectivityMonitor(int rsrp, int rsrq) {
-        this.rsrp = rsrp;
-        this.rsrq = rsrq;
-    }
-
-    /** 
-     * @return int The rsrp.
+    /**
+     *
      */
-    public int getRsrp() {
-        return this.rsrp;
-    }
+    private static final long serialVersionUID = 1L;
 
-    
-    /** 
-     * @return int The rsrq.
-     */
-    public int getRsrq() {
-        return this.rsrq;
+    public InvalidAcceptTypeException(int acceptType) {
+        super(String.format("%d is not supported by the server."));
     }
 }

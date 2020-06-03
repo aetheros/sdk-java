@@ -23,7 +23,7 @@
 
 package com.aetheros.aos.onem2m.client.exceptions;
 
-public class DuplicateRegistrationException extends Exception {
+public class DuplicateRegistrationException extends OneM2MException {
 
     /**
      *
