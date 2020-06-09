@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1C2541</color>
+    <color name="colorPrimaryDark">#1C2541</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="splash_screen_background_color">#ffffff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FFFF0000</color>
+
+
+    <color name="tile">#3A506B</color>
+
+    <!-- button  -->
+    <color name="clicked_button">#DCDCDC</color>
+    <!-- ./button -->
+
+    <!--  Toolbar component -->
+    <color name="component_toolbar_border_bottom">#F2F3F4</color>
+    <!--  ./Toolbar component -->
+
+    <!-- Text -->
+    <!-- ./Text -->
+
+    <!-- High contrast color scheme -->
+    <color name="color_background">#FFFFFF</color>
+    <color name="color_text_header">#544E50</color>
+    <color name="color_text_subdued">#DAD8D9</color>
+    <color name="color_main"></color>
+    <color name="color_accent_1"></color>
+    <!-- ./High contrast color scheme -->
+
+    <color name="signal_great">#90008000</color>
+    <color name="signal_good">#90FFA500</color>
+    <color name="signal_poor">#90FF0000</color>
+
+    <color name="light_grey">#E0E0E0</color>
+
+
+</resources>
+

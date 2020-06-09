@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~                   AETHEROS, INC. CONFIDENTIAL
+  ~
+  ~ The source code contained or described herein and all documents related
+  ~ to the source code ("Material") are owned by Aetheros, Inc. or its
+  ~ suppliers or licensors. Title to the Material remains with Aetheros or its
+  ~ suppliers and licensors. The Material contains trade secrets and proprietary
+  ~ and confidential information of Aetheros or its suppliers and licensors. The
+  ~ Material is protected by worldwide copyright and trade secret laws and treaty
+  ~ provisions. No part of the Material may be used, copied, reproduced, modified,
+  ~ published, uploaded, posted, transmitted, distributed, or disclosed in any way
+  ~ without the prior express written permission of Aetheros, Inc.
+  ~
+  ~ No license under any patent, copyright, trade secret or other intellectual
+  ~ property right is granted to or conferred upon you by disclosure or delivery
+  ~ of the Material, either expressly, by implication, inducement, estoppel or
+  ~ otherwise. Any license under such intellectual property rights must be
+  ~ express and approved by Aetheros, Inc. in writing.
+  ~
+  ~       Copyright (c) 2020 Aetheros, Inc.  All Rights Reserved.
+  ~
+  ~
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AccessPointDiscovery.wifi.SelectSSIDDiscoveryMethodActivity">
+
+    <!-- Aetheros toolbar -->
+    <com.aetheros.techfieldtool.components.Toolbar.ToolbarComponent
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:title="@string/company_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backButton="true"/>
+    <!-- ./Aetheros toolbar -->
+
+
+    <!-- Content container - positioned below toolbar -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <!-- main graphic and text -->
+        <LinearLayout
+            android:id="@+id/main_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:layout_marginTop="1dp"
+            android:background="@color/color_background">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:paddingTop="80dp"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="@string/ssid_discovery"/>
+
+                <ImageView
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:src="@drawable/baseline_wifi_24"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--  bottom border -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below='@+id/main_container'
+            android:background="@color/component_toolbar_border_bottom" />
+        <!--  ./bottom border -->
+
+
+        <!-- ./main graphic and text -->
+
+        <!-- connection selection buttons -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/configure_hidden_ssid_btn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:paddingTop="50dp"
+                    android:drawablePadding="-35dp"
+                    android:background="@color/white"
+                    android:drawableTop="@drawable/baseline_wifi_lock_black_48"
+                    android:text="@string/hidden_ap_ssid">
+                </Button>
+
+                <!--  bottom border -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_below='@+id/main_container'
+                    android:background="@color/component_toolbar_border_bottom" />
+                <!--  ./bottom border -->
+
+                <!--  disabled in activity -->
+                <Button
+                    android:id="@+id/scan_wifi_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingTop="50dp"
+                    android:background="@color/white"
+                    android:drawablePadding="-35dp"
+                    android:drawableTop="@drawable/baseline_perm_scan_wifi_black_48"
+                    android:text="@string/scan_ap_ssid">
+                </Button>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <!-- ./connection selection buttons -->
+
+    <!-- ./Content container -->
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,58 @@
+<resources>
+    <string name="company_name">Aetheros</string>
+    <string name="app_name">Meter Field Tool</string>
+    <string name="available_devices_activity">Available Devices</string>
+    <string name="error_alert_title">Error</string>
+    <string name="error_alert_btn_text">Close</string>
+
+    <string name="search_devices_btn">Discover Devices</string>
+
+    <!--  connection method activity -->
+    <string name="title_activity_connection_method">Connection Method</string>
+    <string name="selection_a_connection_method">Select a connection method</string>
+    <string name="select_wifi_btn">WiFi</string>
+    <string name="select_bt_btn">Bluetooth</string>
+    <!--  ./connection method activity -->
+
+    <!-- meter connection activity -->
+    <string name="title_activity_meter_connection">Select an access point</string>
+    <string name="connect_to_a_meter">Connect to Meter</string>
+    <!-- ./meter connection activity -->
+
+    <string name="RSRQ">RSRQ</string>
+    <string name="RSRP">RSRP</string>
+
+    <string name="link_type_lte">LTE</string>
+
+    <string name="title_activity_discovery_method">DiscoveryMethodActivity</string>
+    <string name="title_activity_select_ssid_discovery_method">Configure WiFi Connection</string>
+    <string name="title_activity_configure_hidden_ssid_connection">Configure Hidden SSID</string>
+    <string name="title_activity_configure_ssid_scan">SSID Scan</string>
+    <string name="title_activity_device_commands">Device Commands</string>
+    <string name="title_activity_wan_link">WAN Link</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="ssid_discovery">SSID Discovery</string>
+    <string name="hidden_ap_ssid">Configure Hidden SSID</string>
+    <string name="scan_ap_ssid">Scan Nearby SSIDs</string>
+    <string name="wifi">WiFi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wisun">Wi-SUN</string>
+
+    <string name="ssid">SSID</string>
+    <string name="ssid_note">The device\'s SSID should be the meterID.</string>
+    <string name="ssid_hint">ex. AOS00001</string>
+
+    <string name="wpa_psk_label">WPA-PSK</string>
+    <string name="wpa_psk_hint">ex. lAdxNL5v4GBe2Nlo</string>
+
+    <string name="connect">Connect</string>
+
+    <string name="title_activity_ssid_scan">Select an access point</string>
+
+    <string name="scan_device_barcode">Scan Barcode</string>
+
+</resources>

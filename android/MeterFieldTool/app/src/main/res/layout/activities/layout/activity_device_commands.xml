@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~                   AETHEROS, INC. CONFIDENTIAL
+  ~
+  ~ The source code contained or described herein and all documents related
+  ~ to the source code ("Material") are owned by Aetheros, Inc. or its
+  ~ suppliers or licensors. Title to the Material remains with Aetheros or its
+  ~ suppliers and licensors. The Material contains trade secrets and proprietary
+  ~ and confidential information of Aetheros or its suppliers and licensors. The
+  ~ Material is protected by worldwide copyright and trade secret laws and treaty
+  ~ provisions. No part of the Material may be used, copied, reproduced, modified,
+  ~ published, uploaded, posted, transmitted, distributed, or disclosed in any way
+  ~ without the prior express written permission of Aetheros, Inc.
+  ~
+  ~ No license under any patent, copyright, trade secret or other intellectual
+  ~ property right is granted to or conferred upon you by disclosure or delivery
+  ~ of the Material, either expressly, by implication, inducement, estoppel or
+  ~ otherwise. Any license under such intellectual property rights must be
+  ~ express and approved by Aetheros, Inc. in writing.
+  ~
+  ~       Copyright (c) 2020 Aetheros, Inc.  All Rights Reserved.
+  ~
+  ~
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DeviceCommands.DeviceCommandsActivity">
+
+    <!-- Aetheros toolbar -->
+    <com.aetheros.techfieldtool.components.Toolbar.ToolbarComponent
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:title="@string/company_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backButton="true"/>
+    <!-- ./Aetheros toolbar -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <!-- Connection details -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <!-- Connected device -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_wifi_black_48"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Connected to: "/>
+
+                    <TextView
+                        android:id="@+id/ssid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ssid_1"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <!-- ./Connected device -->
+
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_below='@+id/main_container'
+                android:background="@color/component_toolbar_border_bottom" />
+
+            <!-- link type -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_link_black_48"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Link type: "/>
+
+                    <TextView
+                        android:id="@+id/connected_device"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WAN"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <!-- ./link type -->
+
+        </LinearLayout>
+        <!-- ./Connection details -->
+
+        <!-- bottom border -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below='@+id/main_container'
+            android:background="@color/component_toolbar_border_bottom" />
+        <!-- ./bottom border -->
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- commands header -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_console_line_black_24dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:text="Available Commands"/>
+
+            </LinearLayout>
+            <!-- ./commands header -->
+
+            <!-- command list -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/command_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+            <!-- ./command list -->
+
+            <!-- bottom border -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below='@+id/main_container'
+                android:background="@color/component_toolbar_border_bottom" />
+            <!-- ./bottom border -->
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

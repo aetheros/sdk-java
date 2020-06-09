@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~                   AETHEROS, INC. CONFIDENTIAL
+  ~
+  ~ The source code contained or described herein and all documents related
+  ~ to the source code ("Material") are owned by Aetheros, Inc. or its
+  ~ suppliers or licensors. Title to the Material remains with Aetheros or its
+  ~ suppliers and licensors. The Material contains trade secrets and proprietary
+  ~ and confidential information of Aetheros or its suppliers and licensors. The
+  ~ Material is protected by worldwide copyright and trade secret laws and treaty
+  ~ provisions. No part of the Material may be used, copied, reproduced, modified,
+  ~ published, uploaded, posted, transmitted, distributed, or disclosed in any way
+  ~ without the prior express written permission of Aetheros, Inc.
+  ~
+  ~ No license under any patent, copyright, trade secret or other intellectual
+  ~ property right is granted to or conferred upon you by disclosure or delivery
+  ~ of the Material, either expressly, by implication, inducement, estoppel or
+  ~ otherwise. Any license under such intellectual property rights must be
+  ~ express and approved by Aetheros, Inc. in writing.
+  ~
+  ~       Copyright (c) 2020 Aetheros, Inc.  All Rights Reserved.
+  ~
+  ~
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AccessPointDiscovery.wifi.ConfigureHiddenSSIDConnectionActivity">
+
+
+    <!-- Aetheros toolbar -->
+    <com.aetheros.techfieldtool.components.Toolbar.ToolbarComponent
+        android:id="@+id/aetheros_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:title="@string/company_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backButton="true"/>
+    <!-- ./Aetheros toolbar -->
+
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="0dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="15dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="25dp"
+        android:layout_marginTop="?attr/actionBarSize">
+
+
+        <com.aetheros.techfieldtool.components.LabeledEditText.LabeledEditText
+            android:id="@+id/ssid_input"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:label="@string/ssid"
+            app:note="@string/ssid_note"
+            app:hint="@string/ssid_hint" />
+
+        <com.aetheros.techfieldtool.components.LabeledEditText.LabeledEditText
+            android:id="@+id/psk_input"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:label="@string/wpa_psk_label"
+            app:hint="@string/wpa_psk_hint" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/scan_barcode_btn"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@color/white"
+                android:drawableTop="@mipmap/scan"
+                android:text="@string/scan_device_barcode" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:id="@+id/connect_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/connect"
+                android:layout_gravity="bottom"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+
+
+</android.support.constraint.ConstraintLayout>
