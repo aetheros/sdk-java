@@ -27,7 +27,6 @@ CONTENT_FORMATS = {
 ONEM2M_FR_OPTION = 256
 ONEM2M_RQI_OPTION = 257
 ONEM2M_TY_OPTION = 267
-
 ONEM2M_OP_OPTION = 256
 ONEM2M_TO_OPTION = 257
 ONEM2M_RQI = 257
@@ -55,7 +54,7 @@ async def register():
     request.opt.add_option(UintOption(OptionNumber.URI_PORT, PORT))
     request.opt.add_option(UintOption(OptionNumber.CONTENT_FORMAT, CONTENT_FORMAT))
     request.opt.add_option(UintOption(OptionNumber.ACCEPT, CONTENT_FORMAT))
-    request.opt.add_option(UintOption(ONEM2M_TY_OPTION, 2))
+    request.opt.add_option(StringOption(ONEM2M_FR_OPTION, AE_CREDENTIAL))
     request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, rqi))
     request.opt.add_option(UintOption(ONEM2M_TY_OPTION, 2))
     request.payload = str.encode(json.dumps({
@@ -65,7 +64,19 @@ async def register():
             "poa": [POA]
            }
         }))
-    log.info("Invoking AE Registration API")
+    log.info("Invoking AE Register API")
+    await submit_request(request)
+
+async def deregister():
+    log.debug("deregister()")
+    rqi = binascii.b2a_hex(os.urandom(5)).decode('utf-8')
+    request = Message(code=Code.DELETE, mtype=CON, uri = f'coap://{HOST}:{PORT}/{REG_PATH}/{aeId}')
+    request.opt.add_option(StringOption(OptionNumber.URI_HOST, HOST))
+    request.opt.add_option(UintOption(OptionNumber.URI_PORT, PORT))
+    request.opt.add_option(StringOption(ONEM2M_FR_OPTION, AE_CREDENTIAL))
+    request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, rqi))
+    request.opt.add_option(UintOption(ONEM2M_TY_OPTION, 2))
+    log.info("Invoking AE Deregister API")
     await submit_request(request)
 
 
@@ -99,22 +110,33 @@ async def create_meter_read_policy():
     log.info("Invoking Create Meter Read Policy API")
     await submit_request(request)
 
+async def delete_meter_read_policy():
+    log.debug("delete_meter_read_policy()")
+    rqi = binascii.b2a_hex(os.urandom(5)).decode('utf-8')
+    request = Message(code=Code.DELETE, mtype=CON, uri = f'coap://{HOST}:{PORT}/{MS_POLICY_PATH}/metersvc-sampl-pol-01')
+    request.opt.add_option(StringOption(OptionNumber.URI_HOST, HOST))
+    request.opt.add_option(UintOption(OptionNumber.URI_PORT, PORT))
+    request.opt.add_option(StringOption(ONEM2M_FR_OPTION, aeId))
+    request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, rqi))
+    log.info("Invoking Delete Meter Read Policy API")
+    await submit_request(request)
+
 async def create_subscription():
     log.debug("create_subscription()")
-    RQI = binascii.b2a_hex(os.urandom(5)).decode('utf-8')
+    rqi = binascii.b2a_hex(os.urandom(5)).decode('utf-8')
     request = Message(code=Code.POST, mtype=CON, uri = f'coap://{HOST}:{PORT}/{MS_READS_PATH}')
     request.opt.add_option(StringOption(OptionNumber.URI_HOST, HOST))
     request.opt.add_option(UintOption(OptionNumber.URI_PORT, PORT))
     request.opt.add_option(UintOption(OptionNumber.CONTENT_FORMAT, CONTENT_FORMAT))
     request.opt.add_option(UintOption(OptionNumber.ACCEPT, CONTENT_FORMAT))
     request.opt.add_option(StringOption(ONEM2M_FR_OPTION, aeId))
-    request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, RQI))
+    request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, rqi))
     request.opt.add_option(UintOption(ONEM2M_TY_OPTION, 23))
     request.payload = str.encode(json.dumps({
         "sub": {
             "rn": "metersvc-sampl-sub-01",
             "enc": {
-                "net": [3,4]
+                "net": [3]
             },
             "nct": 1,
             "nu": [aeId]
@@ -122,6 +144,17 @@ async def create_subscription():
 
     }))
     log.info("Invoking Create Subscription API")
+    await submit_request(request)
+
+async def delete_subscription():
+    log.debug("delete_subscription()")
+    rqi = binascii.b2a_hex(os.urandom(5)).decode('utf-8')
+    request = Message(code=Code.DELETE, mtype=CON, uri = f'coap://{HOST}:{PORT}/{MS_READS_PATH}/metersvc-sampl-sub-01')
+    request.opt.add_option(StringOption(OptionNumber.URI_HOST, HOST))
+    request.opt.add_option(UintOption(OptionNumber.URI_PORT, PORT))
+    request.opt.add_option(StringOption(ONEM2M_FR_OPTION, aeId))
+    request.opt.add_option(StringOption(ONEM2M_RQI_OPTION, rqi))
+    log.info("Invoking Delete Subscription API")
     await submit_request(request)
 
 
@@ -135,24 +168,27 @@ async def submit_request(request):
         log.info("Response Received")
         log.debug("Type: %s", response.mtype)
         log.debug("Code: %s", response.code)
-        log.debug("Request Identifier: %s", response.opt.get_option(257)[0].value.decode("utf-8"))
-        log.info("Payload: %s", response.payload.decode())
+        if response.opt.get_option(257):
+            log.debug("Request Identifier: %s", response.opt.get_option(257)[0].value.decode("utf-8"))
 
 
-        #check for create AE response
-        response_payload = response.payload.decode()
+        if response.payload:
+            log.info("Payload: %s", response.payload.decode())
 
-        try:
-            response_payload_obj = json.loads(response_payload)
-            global aeId 
-            aei = response_payload_obj.get("ae").get("aei")
-            if aei:
-                aeId = aei
-                log.debug("AE Identifier %s", aeId)
-        except ValueError as e:
-            log.debug("Not an AE registration response")
-        except AttributeError as e:
-            log.debug("Not an AE registration response")
+            #check for create AE response
+            response_payload = response.payload.decode()
+
+            try:
+                response_payload_obj = json.loads(response_payload)
+                global aeId 
+                aei = response_payload_obj.get("ae").get("aei")
+                if aei:
+                    aeId = aei
+                    log.debug("AE Identifier %s", aeId)
+            except ValueError as e:
+                log.debug("Not an AE registration response")
+            except AttributeError as e:
+                log.debug("Not an AE registration response")
 
 
 class AeResource(aiocoap.resource.Resource):
@@ -184,4 +220,15 @@ if __name__ == "__main__":
     loop.run_until_complete(create_subscription())
     loop.run_until_complete(create_meter_read_policy())
     asyncio.ensure_future(notification_server())
-    loop.run_forever()
+    try:
+        loop.run_forever()
+    except KeyboardInterrupt:
+        log.debug('Received Keyboard Interrupt.  Cleaning up')
+        loop.run_until_complete(delete_subscription())
+        loop.run_until_complete(delete_meter_read_policy())
+        loop.run_until_complete(deregister())
+        log.debug('Exiting ...')
+
+
+
+
