@@ -141,7 +141,8 @@ public class CSE {
                 req.setOptions(options);
 
                 // Serialize PC object for the payload.
-                String payload = this.gson.toJson(new Payload(ae));
+                String payload = this.gson.toJson(new Payload(ae)).replace("ae","m2m:ae");
+                // System.out.println(payload);
 
                 // Set the payload.
                 req.setPayload(payload);
@@ -152,12 +153,11 @@ public class CSE {
                 // throws invalid accept type exception
                 validateResponse(res);
 
-
                 // Deserialize the response object.
                 JSONObject obj = new JSONObject(res.getResponseText());
 
                 // Convert the json object to a pojo.
-                AE responseAE = this.gson.fromJson(obj.getJSONObject("ae").toString(), AE.class);
+                AE responseAE = this.gson.fromJson(obj.getJSONObject("m2m:ae").toString(), AE.class);
 
 
                 this.aeId = new AEID(responseAE.getAei()); // Store the aeid.
@@ -237,30 +237,30 @@ public class CSE {
             // Convert the response payload to a object.
             // NodeResponsePayload response = this.gson.fromJson(res.getResponseText(), NodeResponsePayload.class);
             JSONObject responseObj = new JSONObject(res.getResponseText());
-            Node nod = this.gson.fromJson(responseObj.getJSONObject("nod").toString(), Node.class);
+            Node nod = this.gson.fromJson(responseObj.getJSONObject("m2m:nod").toString(), Node.class);
 
             // The node children deserialize to Child class instances when using gson.  
             // For now, the JSON raw json response child array contains objects with 
             // the object type as a key and the actual object as the value.
             // Loop over and raw child objects and create the correct pojo for each.
             // @todo Write custom deserializer for Child class.
-            JSONArray ch = responseObj.getJSONObject("nod").getJSONArray("ch");
+            JSONArray ch = responseObj.getJSONObject("m2m:nod").getJSONArray("ch");
 
             // Process children.
             for(int i=0;i<ch.length();i++) {
                 JSONObject jsonChild = new JSONObject(ch.get(i).toString());
 
                 // Replace the base child class with the correct subclass.
-                if(jsonChild.has("dvi")) {
-                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("dvi").toString(), DeviceInformation.class));
-                } else if(jsonChild.has("bat")) {
-                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("bat").toString(), BAT.class));
-                } else if(jsonChild.has("miext")) {
-                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("miext").toString(), ExternalModuleInformation.class));
-                } else if(jsonChild.has("cmext")) {
-                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("cmext").toString(), ExternalConnectivityMonitor.class));
-                } else if(jsonChild.has("acpext")) {
-                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("acpext").toString(), ACPEXT.class));
+                if(jsonChild.has("m2m:dvi")) {
+                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("m2m:dvi").toString(), DeviceInformation.class));
+                } else if(jsonChild.has("m2m:bat")) {
+                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("m2m:bat").toString(), BAT.class));
+                } else if(jsonChild.has("m2m:miext")) {
+                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("m2m:miext").toString(), ExternalModuleInformation.class));
+                } else if(jsonChild.has("m2m:cmext")) {
+                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("m2m:cmext").toString(), ExternalConnectivityMonitor.class));
+                } else if(jsonChild.has("m2m:acpext")) {
+                    nod.getChildren().set(i, this.gson.fromJson(jsonChild.getJSONObject("m2m:acpext").toString(), ACPEXT.class));
                 }
             }
 
