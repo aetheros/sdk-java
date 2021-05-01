@@ -48,221 +48,258 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
-    <!-- Connection details -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-
-        <!-- Connected device -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/baseline_wifi_black_48"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Connected to: "/>
-
-                <TextView
-                    android:id="@+id/ssid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ssid_1"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-        <!-- ./Connected device -->
-
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_below='@+id/main_container'
-            android:background="@color/component_toolbar_border_bottom" />
-
-        <!-- link type -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/baseline_link_black_48"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Link type: "/>
-
-                <TextView
-                    android:id="@+id/connected_device"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/link_type_lte"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-        <!-- ./link type -->
-
-    </LinearLayout>
-    <!-- ./Connection details -->
-
-    <!-- bottom border -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below='@+id/main_container'
-        android:background="@color/component_toolbar_border_bottom" />
-    <!-- ./bottom border -->
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
+            <!-- Connection details -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="150dp">
 
+                <!-- Connected device -->
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:padding="5dp">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/rsrq_label"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:text="@string/RSRQ"
-                        android:textColor="@color/color_text_header"/>
+                        android:src="@drawable/baseline_wifi_black_48"/>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:orientation="horizontal"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="bottom">
+                            android:text="Connected to: "/>
 
-                            <TextView
-                                android:id="@+id/rsrq_reading"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="N/A"
-                                android:textSize="90dp"/>
+                        <TextView
+                            android:id="@+id/ssid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ssid_1"/>
 
-                            <TextView
-                                android:id="@+id/rsrq_uom"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="N/A"
-                                android:layout_marginLeft="5dp"
-                                android:textSize="24dp"/>
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
+                <!-- ./Connected device -->
 
 
-            </FrameLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below='@+id/main_container'
+                            android:background="@color/component_toolbar_border_bottom" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-
+                <!-- link type -->
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:padding="5dp">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/rsrp_label"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:text="@string/RSRP"
-                        android:textColor="@color/color_text_header"/>
+                        android:src="@drawable/baseline_link_black_48"/>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:orientation="horizontal"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="bottom">
+                            android:text="Link type: "/>
 
-                            <TextView
-                                android:id="@+id/rsrp_reading"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="N/A"
-                                android:textSize="90dp"/>
+                        <TextView
+                            android:id="@+id/connected_device"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/link_type_lte"/>
 
-                            <TextView
-                                android:id="@+id/rsrp_uom"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="N/A"
-                                android:layout_marginLeft="5dp"
-                                android:textSize="24dp"/>
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
+                <!-- ./link type -->
 
-            </FrameLayout>
+            </LinearLayout>
+            <!-- ./Connection details -->
 
+            <!-- top border -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below='@+id/main_container'
+                android:background="@color/component_toolbar_border_bottom" />
+            <!-- ./topborder -->
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/wan_connection_status"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="5dp"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/red"
+                                    android:text="Not Connected"/>
+
+                            </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
-    </RelativeLayout>
+        <!-- bottom border -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below='@+id/main_container'
+            android:background="@color/component_toolbar_border_bottom" />
+        <!-- ./bottom border -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/rsrq_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:text="@string/RSRQ"
+                            android:textColor="@color/color_text_header"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="bottom">
+
+                                <TextView
+                                    android:id="@+id/rsrq_reading"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="N/A"
+                                    android:textSize="90dp"/>
+
+                                <TextView
+                                    android:id="@+id/rsrq_uom"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="N/A"
+                                    android:layout_marginLeft="5dp"
+                                    android:textSize="24dp"/>
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/rsrp_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:text="@string/RSRP"
+                            android:textColor="@color/color_text_header"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="bottom">
+
+                                <TextView
+                                    android:id="@+id/rsrp_reading"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="N/A"
+                                    android:textSize="90dp"/>
+
+                                <TextView
+                                    android:id="@+id/rsrp_uom"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="N/A"
+                                    android:layout_marginLeft="5dp"
+                                    android:textSize="24dp"/>
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

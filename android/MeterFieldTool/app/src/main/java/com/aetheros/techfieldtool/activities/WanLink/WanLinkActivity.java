@@ -24,25 +24,15 @@
 
 package com.aetheros.techfieldtool.activities.WanLink;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.text.format.Formatter;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +42,7 @@ import com.aetheros.aos.onem2m.client.exceptions.OneM2MException;
 import com.aetheros.aos.onem2m.common.resources.AE;
 import com.aetheros.aos.onem2m.common.resources.Child;
 import com.aetheros.aos.onem2m.common.resources.ExternalConnectivityMonitor;
+import com.aetheros.aos.onem2m.common.resources.ExternalModuleInformation;
 import com.aetheros.aos.onem2m.common.resources.Node;
 import com.aetheros.techfieldtool.R;
 import com.aetheros.techfieldtool.components.Toolbar.ToolbarComponent;
@@ -60,14 +51,11 @@ import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.network.EndpointManager;
 import org.eclipse.californium.elements.UDPConnector;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +67,7 @@ public class WanLinkActivity extends AppCompatActivity {
     private final String AEI_KEY = "aie_key";
 
     private TextView mSSIDTextView;
+    private TextView mWANConnectionStatusTextView;
 
     private static final int RSRQ_MIN = -20;
     private static final int RSRQ_MAX= -2;
@@ -137,6 +126,7 @@ public class WanLinkActivity extends AppCompatActivity {
         rsrpTextView = findViewById(R.id.rsrp_reading);
         rsrqUomTextView = findViewById(R.id.rsrq_uom);
         rsrpUomTextView = findViewById(R.id.rsrp_uom);
+        mWANConnectionStatusTextView = findViewById(R.id.wan_connection_status);
 
         Typeface digitalTypefaceBold = Typeface.createFromAsset(getAssets(), "fonts/alarm clock.ttf");
         Typeface digitalTypeface = Typeface.createFromAsset(getAssets(), "fonts/alarm clock.ttf");
@@ -247,38 +237,60 @@ public class WanLinkActivity extends AppCompatActivity {
                     if(child instanceof ExternalConnectivityMonitor) {
                         ExternalConnectivityMonitor cmext = (ExternalConnectivityMonitor) child;
 
-                        Log.i(TAG, cmext.getRsrq()+"");
-                        Log.i(TAG, cmext.getRsrp()+"");
+                        Log.i(TAG, cmext.getRsrq() + "");
+                        Log.i(TAG, cmext.getRsrp() + "");
 
-                        rsrqTextView.setText(""+cmext.getRsrq());
-                        rsrpTextView.setText(""+cmext.getRsrp());
+                        rsrqTextView.setText("" + cmext.getRsrq());
+                        rsrpTextView.setText("" + cmext.getRsrp());
 
                         int rsrpColor;
                         int rsrqColor;
 
-                        if(cmext.getRsrp() < RSRP_MIN) {
+                        if (cmext.getRsrp() < RSRP_MIN) {
                             rsrpColor = R.color.signal_poor;
-                        } else if(cmext.getRsrp() < RSRP_MAX)  {
+                        } else if (cmext.getRsrp() < RSRP_MAX) {
                             rsrpColor = R.color.signal_good;
                         } else {
                             rsrpColor = R.color.signal_great;
                         }
 
-                        if(cmext.getRsrq() < RSRQ_MIN) {
+                        if (cmext.getRsrq() < RSRQ_MIN) {
                             rsrqColor = R.color.signal_poor;
-                        } else if(cmext.getRsrq() < RSRQ_MAX)  {
+                        } else if (cmext.getRsrq() < RSRQ_MAX) {
                             rsrqColor = R.color.signal_good;
                         } else {
                             rsrqColor = R.color.signal_great;
                         }
 
-                        Log.i(TAG, ""+rsrpColor);
-                        Log.i(TAG, ""+rsrqColor);
+                        Log.i(TAG, "" + rsrpColor);
+                        Log.i(TAG, "" + rsrqColor);
 
                         rsrqTextView.setTextColor(getResources().getColor(rsrqColor));
                         rsrqUomTextView.setTextColor(getResources().getColor(rsrqColor));
                         rsrpTextView.setTextColor(getResources().getColor(rsrpColor));
                         rsrpUomTextView.setTextColor(getResources().getColor(rsrpColor));
+                    }
+
+                    if(child instanceof ExternalModuleInformation) {
+                        int cnstat = ((ExternalModuleInformation) child).getCnstat();
+                        String wanConnectionStatus = "An error occurred...";
+                        int connectionStatusColor = getResources().getColor(R.color.signal_poor);
+
+                        switch(cnstat) {
+                            case 3:
+                                wanConnectionStatus = "Connected / Provisioned";
+                                connectionStatusColor = getResources().getColor(R.color.signal_great);
+                                break;
+                            case 2:
+                                wanConnectionStatus = "Connected / Unprovisioned";
+                                connectionStatusColor = getResources().getColor(R.color.signal_good);
+                                break;
+                            default:
+                                wanConnectionStatus = "Not Connected";
+                        }
+
+                        mWANConnectionStatusTextView.setText(wanConnectionStatus);
+                        mWANConnectionStatusTextView.setTextColor(connectionStatusColor);
                     }
                 }
             } else {
