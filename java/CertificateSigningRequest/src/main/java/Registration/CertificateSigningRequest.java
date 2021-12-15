@@ -31,11 +31,11 @@ public class CertificateSigningRequest {
     SigningRequest signreq;
 
 
-    public CertificateSigningRequest(String wanaddr, String tokenid) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
+    public CertificateSigningRequest(String wanaddr, String tokenid, String rsc) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
         this.signreq = new SigningRequest(
                 wanaddr,
                 tokenid,
-                this.getRequestCert(wanaddr)
+                this.getRequestCert(wanaddr, rsc)
         );
     }
 
@@ -49,7 +49,7 @@ public class CertificateSigningRequest {
         return gson.toJson(this);
     }
 
-    private String getRequestCert(String wanaddr) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, OperatorCreationException, IOException {
+    private String getRequestCert(String wanaddr, String rsc) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, OperatorCreationException, IOException {
         // Generate key pair.
 
         // RSA
@@ -62,13 +62,17 @@ public class CertificateSigningRequest {
         KeyPair keypair = keyGen.genKeyPair();
 
         // Build subject.
-        X500Principal subject = new X500Principal("C = US, ST = California, O = Grid Net, OU = Engineering, CN = Grid-Net-Dev-PolicyNet-Root-CA");
+        X500Principal subject = new X500Principal(String.format("C = US, ST = California, O = Grid Net, OU = Engineering, CN = /%s%s", wanaddr,rsc));
 
         // Build the CSR.
         PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(subject, keypair.getPublic());
 
+        String aeRscId = String.format("urn://%s%s", wanaddr, rsc);
+        String aeAppId = "urn:api:Nra1.com.aos.iot";
+
         GeneralName[] san = new GeneralName[]{
-                new GeneralName(GeneralName.dNSName, wanaddr)
+                new GeneralName(GeneralName.uniformResourceIdentifier, aeRscId),
+                new GeneralName(GeneralName.uniformResourceIdentifier, aeAppId)
         };
 
         Extension[] extensions = new Extension[] {

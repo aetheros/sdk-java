@@ -25,15 +25,15 @@ public class PolicynetCA {
         this.gson = new Gson();
     }
 
-    public CertificateConfirmResponse createCertifcateSigningRequest(String wanIp, String tokenId) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
-        CertificateSigningResponse csr = this.signCertificate(wanIp, tokenId);
+    public CertificateConfirmResponse createCertifcateSigningRequest(String wanIp, String tokenId, String rsc) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
+        CertificateSigningResponse csr = this.signCertificate(wanIp, tokenId, rsc);
         CertificateConfirmResponse ccr = this.confirmCertificate(csr);
 
         return ccr;
     }
 
-    private CertificateSigningResponse signCertificate(String wanIp, String tokenId) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
-        CertificateSigningRequest csr = new CertificateSigningRequest(wanIp, tokenId);
+    private CertificateSigningResponse signCertificate(String wanIp, String tokenId, String rsc) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, OperatorCreationException {
+        CertificateSigningRequest csr = new CertificateSigningRequest(wanIp, tokenId, rsc);
 
         HttpURLConnection conn = (HttpURLConnection) new URL(this.signingUri).openConnection();
         conn.setRequestMethod("POST");

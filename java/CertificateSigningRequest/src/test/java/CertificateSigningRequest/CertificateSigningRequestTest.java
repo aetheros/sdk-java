@@ -57,6 +57,7 @@ public class CertificateSigningRequestTest {
     @Test public void testCertificateSigningRequest() {
         String WAN_IP = "355808100004297";
         String TOKEN_ID = "cdcae0cc-0813-4a2a-a92b-9937475c2182";
+        String aeResourceId = "/Csmartmeter";
 
         String SIGNING_URI = "https://dev9.corp.aetheros.com:18090/CertificateSigning";
         String CONFIRMING_URI = "https://dev9.corp.aetheros.com:18090/CertificateConfirm";
@@ -65,7 +66,7 @@ public class CertificateSigningRequestTest {
             // Create a CA instance with the signing and confirm backend.
             PolicynetCA ca = new PolicynetCA(SIGNING_URI, CONFIRMING_URI);
             // Create a signed certificate.
-            CertificateConfirmResponse crr = ca.createCertifcateSigningRequest(WAN_IP, TOKEN_ID);
+            CertificateConfirmResponse crr = ca.createCertifcateSigningRequest(WAN_IP, TOKEN_ID, aeResourceId);
 
             assertNotNull("Confirmed signed certificate contains PEM.", crr.getCaCertPEM());
         } catch (InvalidAlgorithmParameterException e) {
